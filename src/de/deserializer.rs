@@ -250,7 +250,7 @@ impl<'de, 'a, F: Flavor<'de>> de::Deserializer<'de> for &'a mut Deserializer<'de
         V: Visitor<'de>,
     {
         let v = self.try_take_varint_u16()?;
-        visitor.visit_i16(de_zig_zag_i16(v))
+        visitor.visit_i16(v as i16)
     }
 
     #[inline]
@@ -259,7 +259,7 @@ impl<'de, 'a, F: Flavor<'de>> de::Deserializer<'de> for &'a mut Deserializer<'de
         V: Visitor<'de>,
     {
         let v = self.try_take_varint_u32()?;
-        visitor.visit_i32(de_zig_zag_i32(v))
+        visitor.visit_i32(v as i32)
     }
 
     #[inline]
@@ -268,7 +268,7 @@ impl<'de, 'a, F: Flavor<'de>> de::Deserializer<'de> for &'a mut Deserializer<'de
         V: Visitor<'de>,
     {
         let v = self.try_take_varint_u64()?;
-        visitor.visit_i64(de_zig_zag_i64(v))
+        visitor.visit_i64(v as i64)
     }
 
     #[inline]
@@ -277,7 +277,7 @@ impl<'de, 'a, F: Flavor<'de>> de::Deserializer<'de> for &'a mut Deserializer<'de
         V: Visitor<'de>,
     {
         let v = self.try_take_varint_u128()?;
-        visitor.visit_i128(de_zig_zag_i128(v))
+        visitor.visit_i128(v as i128)
     }
 
     #[inline]
@@ -580,20 +580,4 @@ impl<'de, 'a, F: Flavor<'de>> serde::de::EnumAccess<'de> for &'a mut Deserialize
         let v = DeserializeSeed::deserialize(seed, varint.into_deserializer())?;
         Ok((v, self))
     }
-}
-
-fn de_zig_zag_i16(n: u16) -> i16 {
-    ((n >> 1) as i16) ^ (-((n & 0b1) as i16))
-}
-
-fn de_zig_zag_i32(n: u32) -> i32 {
-    ((n >> 1) as i32) ^ (-((n & 0b1) as i32))
-}
-
-fn de_zig_zag_i64(n: u64) -> i64 {
-    ((n >> 1) as i64) ^ (-((n & 0b1) as i64))
-}
-
-fn de_zig_zag_i128(n: u128) -> i128 {
-    ((n >> 1) as i128) ^ (-((n & 0b1) as i128))
 }

@@ -100,29 +100,25 @@ where
 
     #[inline]
     fn serialize_i16(self, v: i16) -> Result<()> {
-        let zzv = zig_zag_i16(v);
-        self.try_push_varint_u16(zzv)
+        self.try_push_varint_u16(v as u16)
             .map_err(|_| Error::SerializeBufferFull)
     }
 
     #[inline]
     fn serialize_i32(self, v: i32) -> Result<()> {
-        let zzv = zig_zag_i32(v);
-        self.try_push_varint_u32(zzv)
+        self.try_push_varint_u32(v as u32)
             .map_err(|_| Error::SerializeBufferFull)
     }
 
     #[inline]
     fn serialize_i64(self, v: i64) -> Result<()> {
-        let zzv = zig_zag_i64(v);
-        self.try_push_varint_u64(zzv)
+        self.try_push_varint_u64(v as u64)
             .map_err(|_| Error::SerializeBufferFull)
     }
 
     #[inline]
     fn serialize_i128(self, v: i128) -> Result<()> {
-        let zzv = zig_zag_i128(v);
-        self.try_push_varint_u128(zzv)
+        self.try_push_varint_u128(v as u128)
             .map_err(|_| Error::SerializeBufferFull)
     }
 
@@ -545,20 +541,4 @@ where
     fn end(self) -> Result<()> {
         Ok(())
     }
-}
-
-fn zig_zag_i16(n: i16) -> u16 {
-    ((n << 1) ^ (n >> 15)) as u16
-}
-
-fn zig_zag_i32(n: i32) -> u32 {
-    ((n << 1) ^ (n >> 31)) as u32
-}
-
-fn zig_zag_i64(n: i64) -> u64 {
-    ((n << 1) ^ (n >> 63)) as u64
-}
-
-fn zig_zag_i128(n: i128) -> u128 {
-    ((n << 1) ^ (n >> 127)) as u128
 }
